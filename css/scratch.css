@@ -1,0 +1,98 @@
+
+body {
+    background-color: rgb(243, 237, 209);     
+    font-family: 'Segoe UI', sans-serif;
+    color: #333333;
+    margin: 0;
+    padding: 0;
+  }
+  
+ 
+  #banner {
+    background-image: url(../assets/img/climbbanner.jpg);
+    background-size: cover;
+    background-position: center;
+    height: 250px;
+    position: relative;
+  }
+  
+
+  .nav-menu {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+  }
+  .nav-menu a {
+    color: #ffffff;                 
+    font-family: 'Arial', sans-serif; 
+    text-decoration: none;
+    margin-left: 15px;
+    padding: 5px 10px;
+    background: rgba(0, 0, 0, 0.4);
+    border-radius: 4px;
+  }
+  
+
+  #content {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 0 20px;
+  }
+  
+
+  .intro {
+    font-size: 1.5rem; /* bigger text */
+    font-weight: bold; /* bolder text */
+    font-family: 'Georgia', 'Times New Roman', serif; /* more intricate, elegant font */
+    margin-bottom: 20px;
+    line-height: 1.6; /* optional: improves readability */
+  }
+  
+
+  .video-container,
+  .tableau-container {
+    margin-bottom: 30px;
+  }
+  
+
+  #list-section {
+    margin-top: 20px;
+  }
+  #list-section ol {
+    padding-left: 20px;
+  }
+  #list-section ul {
+    padding-left: 15px;
+    list-style-type: disc;
+  }
+  
+
+  a {
+    color: #0066cc;
+  }
+  a:hover {
+    text-decoration: underline;
+  }
+
+  .bottom-nav {
+    display: flex;
+    justify-content: center;
+    margin-top: 40px;
+    margin-bottom: 30px;
+  }
+  
+  .to-top-link {
+    background-color: #444;
+    color: white;
+    padding: 10px 20px;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 1rem;
+    border-radius: 5px;
+    transform: translateX(-350px);
+    transition: background-color 0.3s ease;
+  }
+  
+  .to-top-link:hover {
+    background-color: #666;
+  }

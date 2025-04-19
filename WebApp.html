@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>2048 Game</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #faf8ef;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Menu Bar */
+    #menu-bar {
+      width: 100%;
+      background-color: #bbada0;
+      padding: 10px;
+      box-sizing: border-box;
+      display: flex;
+      align-items: center;
+    }
+    #menu-bar a {
+      color: #f9f6f2;
+      text-decoration: none;
+      font-weight: bold;
+      margin-right: 20px;
+      font-size: 18px;
+    }
+
+    h1 {
+      font-size: 60px;
+      color: #776e65;
+      margin: 20px 0 10px;
+    }
+
+    .game-container {
+      width: 400px;
+      height: 400px;
+      margin: 0 auto;
+      background-color: #bbada0;
+      border-radius: 6px;
+      padding: 10px;
+      box-sizing: border-box;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+    }
+
+    .tile {
+      width: 90px;
+      height: 90px;
+      background-color: #cdc1b4;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: bold;
+      border-radius: 4px;
+      color: #776e65;
+      transition: all 0.1s ease-in-out;
+    }
+
+    .tile-2    { background-color: #eee4da; }
+    .tile-4    { background-color: #ede0c8; }
+    .tile-8    { background-color: #f2b179; color: #f9f6f2; }
+    .tile-16   { background-color: #f59563; color: #f9f6f2; }
+    .tile-32   { background-color: #f67c5f; color: #f9f6f2; }
+    .tile-64   { background-color: #f65e3b; color: #f9f6f2; }
+    .tile-128  { background-color: #edcf72; color: #f9f6f2; }
+    .tile-256  { background-color: #edcc61; color: #f9f6f2; }
+    .tile-512  { background-color: #edc850; color: #f9f6f2; }
+    .tile-1024 { background-color: #edc53f; color: #f9f6f2; }
+    .tile-2048 { background-color: #edc22e; color: #f9f6f2; }
+  </style>
+</head>
+<body>
+  <!-- Menu Bar -->
+  <div id="menu-bar">
+    <a href="index.html">Home</a>
+  </div>
+
+  <h1>2048</h1>
+  <div class="game-container" id="grid-container"></div>
+  <p>Use arrow keys to play</p>
+
+  <script>
+    const gridContainer = document.getElementById('grid-container');
+    let board = [];
+
+    function initBoard() {
+      board = new Array(4).fill(0).map(() => new Array(4).fill(0));
+      addRandomTile();
+      addRandomTile();
+      drawBoard();
+    }
+
+    function drawBoard() {
+      gridContainer.innerHTML = '';
+      board.forEach(row => {
+        row.forEach(value => {
+          const tile = document.createElement('div');
+          tile.className = 'tile';
+          if (value) {
+            tile.classList.add(`tile-${value}`);
+            tile.textContent = value;
+          }
+          gridContainer.appendChild(tile);
+        });
+      });
+    }
+
+    function addRandomTile() {
+      const empty = [];
+      board.forEach((row, i) => row.forEach((val, j) => { if (val === 0) empty.push({i,j}); }));
+      if (!empty.length) return;
+      const {i,j} = empty[Math.floor(Math.random()*empty.length)];
+      board[i][j] = Math.random() > 0.1 ? 2 : 4;
+    }
+
+    function slide(row) {
+      const filtered = row.filter(v => v);
+      for (let i = 0; i < filtered.length - 1; i++) {
+        if (filtered[i] === filtered[i+1]) {
+          filtered[i] *= 2;
+          filtered[i+1] = 0;
+        }
+      }
+      const merged = filtered.filter(v => v);
+      return merged.concat(new Array(4 - merged.length).fill(0));
+    }
+
+    function moveLeft() {
+      let moved = false;
+      board = board.map(row => {
+        const newRow = slide(row);
+        if (JSON.stringify(newRow) !== JSON.stringify(row)) moved = true;
+        return newRow;
+      });
+      if (moved) { addRandomTile(); drawBoard(); }
+    }
+
+    function moveRight() {
+      let moved = false;
+      board = board.map(row => {
+        const reversed = row.slice().reverse();
+        const newRow = slide(reversed).reverse();
+        if (JSON.stringify(newRow) !== JSON.stringify(row)) moved = true;
+        return newRow;
+      });
+      if (moved) { addRandomTile(); drawBoard(); }
+    }
+
+    function moveUp() {
+      let moved = false;
+      for (let j = 0; j < 4; j++) {
+        const col = board.map(r => r[j]);
+        const newCol = slide(col);
+        newCol.forEach((v, i) => {
+          if (board[i][j] !== v) moved = true;
+          board[i][j] = v;
+        });
+      }
+      if (moved) { addRandomTile(); drawBoard(); }
+    }
+
+    function moveDown() {
+      let moved = false;
+      for (let j = 0; j < 4; j++) {
+        const col = board.map(r => r[j]).reverse();
+        const newCol = slide(col).reverse();
+        newCol.forEach((v, i) => {
+          if (board[i][j] !== v) moved = true;
+          board[i][j] = v;
+        });
+      }
+      if (moved) { addRandomTile(); drawBoard(); }
+    }
+
+    document.addEventListener('keydown', e => {
+      let handled = true;
+      switch (e.key) {
+        case 'ArrowLeft': moveLeft(); break;
+        case 'ArrowRight': moveRight(); break;
+        case 'ArrowUp': moveUp(); break;
+        case 'ArrowDown': moveDown(); break;
+        default: handled = false;
+      }
+      if (handled) e.preventDefault();
+    });
+
+    initBoard();
+  </script>
+</body>
+</html>
+
